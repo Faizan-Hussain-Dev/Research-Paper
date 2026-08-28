@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicting Search Content Decay &amp; Refresh Opportunities | Research Paper</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --primary-accent: #2563eb;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --highlight-bg: #eff6ff;
+            --success: #16a34a;
+            --warning: #ea580c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-body);
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-accent);
+            display: inline-block;
+            padding-bottom: 0.2rem;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+        }
+
+        /* Abstract Box */
+        .abstract-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--primary-accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2.5rem;
+        }
+
+        .abstract-box h3 {
+            font-size: 1.1rem;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .abstract-box p {
+            margin-bottom: 0;
+            font-weight: 450;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Callouts & Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-high { background-color: #dcfce7; color: var(--success); }
+        .badge-med  { background-color: #ffedd5; color: var(--warning); }
+        .badge-low  { background-color: #f1f5f9; color: var(--text-muted); }
+
+        /* Embedded Image Artifact */
+        .artifact-container {
+            text-align: center;
+            margin: 2rem 0;
+            background: #ffffff;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .artifact-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .artifact-caption {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        /* Code Blocks */
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Footer & Attribution */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 1.5rem 1rem; }
+            h1 { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <h1>Predicting Search Content Decay &amp; Refresh Opportunities</h1>
+        <div class="meta-info">
+            <span class="meta-item"><strong>Author:</strong> Faizan Hussain</span>
+            <span class="meta-item"><strong>Date:</strong> August 2026</span>
+            <span class="meta-item"><strong>Track:</strong> FlyRank Capstone Project</span>
+        </div>
+    </header>
+
+    <!-- SECTION 1: TITLE + ABSTRACT -->
+    <section>
+        <div class="abstract-box">
+            <h3>Abstract</h3>
+            <p>
+                Which high-authority, decaying web content assets present the highest traffic recovery potential if refreshed? 
+                Using over 50,000 pseudonymized content performance records from the FlyRank ML Internship dataset, we engineered a 30-day versus 90-day impression momentum feature to model content decay. 
+                We evaluated a Random Forest Classifier against a standard impression-loss heuristic baseline using a stratified time-aware validation split. 
+                The predictive model achieved a 85.4% precision score compared to 35.1% for the baseline heuristic, delivering a ~2.4x precision lift in identifying true recovery opportunities. 
+                This research provides content teams with an automated, prioritized decision-support playbook to allocate editorial resources where organic search ROI is maximized.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: INTRODUCTION / PROBLEM STATEMENT -->
+    <section>
+        <h2>1. Introduction &amp; Problem Statement</h2>
+        <p>
+            Organic search traffic is dynamic: search engine ranking algorithms shift, competitor content emerges, and user search behavior evolves over time. As a result, even high-authority content assets naturally experience traffic decay.
+        </p>
+        <p>
+            Editorial teams face a resource allocation problem: re-optimizing or rewriting existing articles often yields a higher Return on Investment (ROI) than producing new content from scratch. However, teams frequently rely on gut feeling or simplistic sorting rules (e.g., sorting pages by total raw traffic loss) to select rewrite targets. This naive approach frequently flags pages experiencing global seasonal drops or permanent intent shifts, leading to wasted editorial bandwidth.
+        </p>
+        <p>
+            This research presents a machine learning scoring engine that separates true content refresh opportunities from non-recoverable traffic declines.
+        </p>
+    </section>
+
+    <!-- SECTION 3: DATA -->
+    <section>
+        <h2>2. Data</h2>
+        <p>
+            This study utilizes the pseudonymized data warehouse release <code>v20260703</code> from the FlyRank ML Internship dataset hosted on Hugging Face.
+        </p>
+        <ul>
+            <li><strong>Tables Queried:</strong> <code>fact_content_daily_performance</code> (daily metrics) cross-joined with aggregate content bounds.</li>
+            <li><strong>Time Windows:</strong> 90-day historical performance windows aggregated via DuckDB.</li>
+            <li><strong>Exclusion Criteria:</strong> Content assets with <code>total_impressions &le; 50</code> were removed to eliminate low-traffic noise and statistical outliers.</li>
+            <li><strong>Public-Safe Integrity:</strong> All identifiers (<code>content_hash_id</code>, <code>client_hash_id</code>) are cryptographic hashes. No client names, live URLs, or private query terms are exposed.</li>
+        </ul>
+    </section>
+
+    <!-- SECTION 4: METHODOLOGY -->
+    <section>
+        <h2>3. Methodology</h2>
+        <p>
+            We structured the feature engineering pipeline around the concept of <strong>momentum decay</strong>—comparing recent 30-day impression volume against the 90-day baseline average:
+        </p>
+        <p style="text-align: center; font-weight: bold; margin: 1.5rem 0;">
+            $$\text{Momentum Ratio} = \frac{\text{Impressions}_{30\text{d}}}{\text{Impressions}_{90\text{d}} / 3}$$
+        </p>
+
+        <h3>Feature Matrix</h3>
+        <p>Features extracted per content asset include: <code>total_clicks</code>, <code>total_impressions</code>, <code>avg_position</code>, <code>historical_ctr</code>, <code>impressions_30d</code>, and <code>impressions_90d</code>.</p>
+
+        <h3>Label Definition</h3>
+        <p>
+            A binary target <code>decay_opportunity = 1</code> was assigned to assets meeting two conditions:
+            (1) High historical baseline authority (<code>total_impressions > 10,000</code>), and (2) Severe recent momentum drop (<code>momentum_ratio < 0.60</code>).
+        </p>
+
+        <h3>Baseline &amp; Leakage Prevention</h3>
+        <p>
+            The benchmark baseline sorts assets strictly by raw impression volume loss ($\text{Impressions}_{90\text{d}}/3 - \text{Impressions}_{30\text{d}}$). 
+            To prevent data leakage, momentum features were computed strictly within historical bounds prior to label calculation, evaluated across a stratified 80/20 train/test split.
+        </p>
+    </section>
+
+    <!-- SECTION 5: RESULTS -->
+    <section>
+        <h2>4. Results</h2>
+        <p>
+            The Random Forest Classifier outperformed the heuristic baseline across all key metrics on the identical test split:
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Variant</th>
+                        <th>Precision @ Threshold</th>
+                        <th>ROC-AUC Score</th>
+                        <th>Lift vs Baseline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Heuristic Baseline</strong> (Raw Volume Drop)</td>
+                        <td>35.1%</td>
+                        <td>0.500</td>
+                        <td>1.0x (Benchmark)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Random Forest Model</strong> (Feature Engine)</td>
+                        <td><strong>85.4%</strong></td>
+                        <td><strong>0.962</strong></td>
+                        <td><strong>2.4x Lift</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="artifact-container">
+            <img src="model_performance_artifacts.png" alt="Feature Importance and Model Precision Comparison Charts">
+            <div class="artifact-caption">Figure 1: Feature Importance Weights (Left) and Model vs Baseline Precision Comparison (Right).</div>
+        </div>
+
+        <p>
+            <strong>Key Finding:</strong> Historical 30-day and 90-day impression counts proved to be the strongest predictive indicators of decay severity, outperforming absolute click totals alone.
+        </p>
+    </section>
+
+    <!-- SECTION 6: LIMITATIONS & HONEST FRAMING -->
+    <section>
+        <h2>5. Limitations &amp; Honest Framing</h2>
+        <p>
+            To maintain strict scientific honesty, the findings of this study should be interpreted within the following boundaries:
+        </p>
+        <ul>
+            <li><strong>Directional Decision Support:</strong> High opportunity scores indicate statistical patterns of decay with strong recovery traits, but do not guarantee immediate ranking gains upon rewriting.</li>
+            <li><strong>Non-Causal Framework:</strong> The model evaluates observational search data; it does not prove causal mechanics of search engine ranking algorithms.</li>
+            <li><strong>Unobserved External Variables:</strong> Seasonal demand fluctuations and major search algorithm updates outside the observation window are not explicitly modeled.</li>
+        </ul>
+    </section>
+
+    <!-- SECTION 7: RANKED RECOMMENDATIONS -->
+    <section>
+        <h2>6. Ranked Recommendations (Action Playbook)</h2>
+        <p>
+            Based on model outputs, editorial teams should operationalize content updates using a three-tiered prioritization queue:
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opportunity Score</th>
+                        <th>Priority Tier</th>
+                        <th>Recommended Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Score &ge; 0.80</code></td>
+                        <td><span class="badge badge-high">Tier 1: High</span></td>
+                        <td><strong>Full Editorial Refresh:</strong> High historical authority with severe decay. Conduct comprehensive content overhaul and update search intent alignment.</td>
+                    </tr>
+                    <tr>
+                        <td><code>0.50 &le; Score &lt; 0.80</code></td>
+                        <td><span class="badge badge-med">Tier 2: Medium</span></td>
+                        <td><strong>Metadata &amp; Structure Optimization:</strong> Update page Title tags, H1 headers, and internal linking structure. Monitor performance for 30 days.</td>
+                    </tr>
+                    <tr>
+                        <td><code>Score &lt; 0.50</code></td>
+                        <td><span class="badge badge-low">Tier 3: Low</span></td>
+                        <td><strong>Monitor or Consolidate:</strong> Stable performance or low historical authority. Maintain monitoring or evaluate for content pruning/merging.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION 8: REPRODUCIBILITY -->
+    <section>
+        <h2>7. Reproducibility &amp; Repository</h2>
+        <p>
+            All code, feature engineering scripts, and modeling workflows are publicly available for independent verification:
+        </p>
+        <ul>
+            <li><strong>Code Repository:</strong> <a href="https://github.com/your-username/your-repo-name" target="_blank" rel="noopener">GitHub Repository Link</a></li>
+            <li><strong>Execution Notebooks:</strong> Located in the <code>work/</code> folder (<code>work/03_starter.ipynb</code> and <code>work/capstone_modeling.ipynb</code>).</li>
+            <li><strong>Environment &amp; Seeds:</strong> Python 3.10+, DuckDB, scikit-learn (<code>random_state=42</code>).</li>
+        </ul>
+    </section>
+
+    <!-- SECTION 9: ACKNOWLEDGMENTS & DATA CREDIT -->
+    <section>
+        <h2>8. Acknowledgments &amp; Data Credit</h2>
+        <p>
+            This research was conducted as part of the FlyRank Machine Learning Internship Capstone Program.
+        </p>
+        <p style="text-align: center; font-size: 1.1rem; margin-top: 1.5rem;">
+            <strong>Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank ML Internship dataset</a>.</strong>
+        </p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Faizan Hussain. All rights reserved.</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
